@@ -4,10 +4,11 @@ const Submission = require('../models/Submissions');
 const mongoose = require('mongoose');
 const { gradeSubmissionValidation } = require('../validations/validations');
 const bcrypt = require('bcrypt');
+const authentication = require('../authentication');
 
 
 //GRADE SUBMISSIONS
-router.put('/mentor/grade-submission/:id', async (req, res) => {
+router.put('/mentor/grade-submission/:id', authentication, async (req, res) => {
 
     //validate details before creating a mentor object
     const { error } = gradeSubmissionValidation(req.body);
@@ -43,7 +44,7 @@ router.put('/mentor/grade-submission/:id', async (req, res) => {
 });
 
 //VIEW SUBMISSIONS FOR AN ASSESSMENT
-router.get('/mentor/view-submissions/:assessID', async (req, res) => {
+router.get('/mentor/view-submissions/:assessID', authentication, async (req, res) => {
 
     try {
 
@@ -63,7 +64,7 @@ router.get('/mentor/view-submissions/:assessID', async (req, res) => {
 
 });
 //SELECT A SUBMISSION
-router.get('/mentor/select-submission/:id', async (req, res) => {
+router.get('/mentor/select-submission/:id', authentication, async (req, res) => {
 
     try {
         //check if submission is available in database and then display it

@@ -7,9 +7,10 @@ const mongoose = require('mongoose');
 const { userRegValidation, loginValidation, assessmentValidation, gradeSubmissionValidation, submissionValidation } = require('../validations/validations');
 const bcrypt = require('bcrypt');
 const { ObjectId } = require('mongodb');
+const authentication = require('../authentication');
 
 //ADD ASSESSMENT
-router.post('/admin/create-assessment', async (req, res) => {
+router.post('/admin/create-assessment', authentication, async (req, res) => {
 
     //validate details before creating an assessment object
     const { error } = assessmentValidation(req.body);
@@ -18,7 +19,7 @@ router.post('/admin/create-assessment', async (req, res) => {
     //check if mentorID is a valid ID in database
     const castedID = mongoose.Types.ObjectId(req.body.mentorID);
     const mentorExists = await User.findById({ _id: castedID });
-    if (mentorExists.role !== 2) return res.status(400).send({ failure: 'Input a valid mentor ID' });
+    // if (mentorExists.role !== 2) return res.status(400).send({ failure: 'Input a valid mentor ID' });
 
     //create a new assessment object
     const assessment = new Assessment({
@@ -40,7 +41,7 @@ router.post('/admin/create-assessment', async (req, res) => {
 });
 
 //EDIT ASSESSMENT
-router.put('/admin/edit-assessment/:id', async (req, res) => {
+router.put('/admin/edit-assessment/:id', authentication, async (req, res) => {
 
     try {
         //check if assessment exists in database
@@ -66,7 +67,7 @@ router.put('/admin/edit-assessment/:id', async (req, res) => {
 });
 
 //DELETE ASSESSMENT
-router.delete('/admin/delete-assessment/:id', async (req, res) => {
+router.delete('/admin/delete-assessment/:id', authentication, async (req, res) => {
 
     try {
 
@@ -88,7 +89,7 @@ router.delete('/admin/delete-assessment/:id', async (req, res) => {
 });
 
 //CREATE ASSESSMENT SUBMISSION
-router.post('/admin/submit-assessment', async (req, res) => {
+router.post('/admin/submit-assessment', authentication, async (req, res) => {
 
     //validate details before creating an assessment submission object
     const { error } = submissionValidation(req.body);
@@ -127,7 +128,7 @@ router.post('/admin/submit-assessment', async (req, res) => {
 });
 
 //EDIT ASSESSMENT SUBMISSION
-router.put('/admin/edit-submission/:id', async (req, res) => {
+router.put('/admin/edit-submission/:id', authentication, async (req, res) => {
 
     try {
         //check if submission exists in database
@@ -155,7 +156,7 @@ router.put('/admin/edit-submission/:id', async (req, res) => {
 
 
 //DELETE ASSESSMENT SUBMISSION
-router.delete('/admin/delete-submission/:id', async (req, res) => {
+router.delete('/admin/delete-submission/:id', authentication, async (req, res) => {
 
     try {
 
@@ -177,7 +178,7 @@ router.delete('/admin/delete-submission/:id', async (req, res) => {
 });
 
 //GRADE ASSESSMENT SUBMISSION
-router.put('/admin/grade-submission/:id', async (req, res) => {
+router.put('/admin/grade-submission/:id', authentication, async (req, res) => {
 
     //validate details before creating a mentor object
     const { error } = gradeSubmissionValidation(req.body);
@@ -209,7 +210,7 @@ router.put('/admin/grade-submission/:id', async (req, res) => {
 });
 
 //VIEW SUBMISSIONS FOR AN ASSESSMENT
-router.get('/admin/view-submissions/:assessID', async (req, res) => {
+router.get('/admin/view-submissions/:assessID', authentication, async (req, res) => {
 
     try {
 
@@ -230,7 +231,7 @@ router.get('/admin/view-submissions/:assessID', async (req, res) => {
 });
 
 //SELECT A SUBMISSION
-router.get('/admin/select-submission/:id', async (req, res) => {
+router.get('/admin/select-submission/:id', authentication, async (req, res) => {
 
     try {
         //check if submission is available in database and then display it
@@ -245,7 +246,7 @@ router.get('/admin/select-submission/:id', async (req, res) => {
 });
 
 //CREATE NEW USER
-router.post('/admin/register', async (req, res) => {
+router.post('/admin/register', authentication, async (req, res) => {
 
     //validate details before creating an  object
     const { error } = userRegValidation(req.body);
@@ -283,7 +284,7 @@ router.post('/admin/register', async (req, res) => {
 });
 
 //EDIT USER
-router.put('/admin/edit-user/:id', async (req, res) => {
+router.put('/admin/edit-user/:id', authentication, async (req, res) => {
 
     try {
         //check if user exists in database
@@ -311,7 +312,7 @@ router.put('/admin/edit-user/:id', async (req, res) => {
 });
 
 //DELETE USER
-router.delete('/admin/delete-user/:id', async (req, res) => {
+router.delete('/admin/delete-user/:id', authentication, async (req, res) => {
 
     try {
 

@@ -6,10 +6,11 @@ const Assessment = require('../models/Assessments');
 const mongoose = require('mongoose');
 const { submissionValidation } = require('../validations/validations');
 const { cast } = require('@hapi/joi/lib/base');
+const authentication = require('../authentication');
 
 
 //CREATE ASSESSMENT SUBMISSION
-router.post('/admin/submit-assessment', async (req, res) => {
+router.post('/student/submit-assessment', authentication, async (req, res) => {
 
     //validate details before creating an assessment submission object
     const { error } = submissionValidation(req.body);
@@ -22,10 +23,6 @@ router.post('/admin/submit-assessment', async (req, res) => {
     const studentExists = await User.findById({ _id: castedStudentID });
     const assessmentExists = await Assessment.findById({ _id: castedAssessmentID });
     const mentorExists = await User.findById({ _id: castedMentorID });
-
-    if (studentExists.role !== 1) return res.status(400).send({ failure: 'Input a valid student ID' });
-    if (!assessmentExists) return res.status(400).send({ failure: 'Input a valid assessment ID' });
-    if (mentorExists.role !== 2) return res.status(400).send({ failure: 'Input a valid mentor ID' });
 
     //create a new assessment submission object
     const assessmentSubmission = new Submission({
@@ -48,7 +45,7 @@ router.post('/admin/submit-assessment', async (req, res) => {
 });
 
 //VIEW SUBMISSIONS
-router.get('/student/view-submissions/:id', async (req, res) => {
+router.get('/student/view-submissions/:id', authentication, async (req, res) => {
 
     try {
 
@@ -66,7 +63,7 @@ router.get('/student/view-submissions/:id', async (req, res) => {
 });
 
 //SELECT A SUBMISSION
-router.get('/student/select-submission/:id', async (req, res) => {
+router.get('/student/select-submission/:id', authentication, async (req, res) => {
 
     try {
         //check if submission is available in database and then display it

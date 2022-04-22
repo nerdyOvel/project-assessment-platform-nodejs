@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/Users');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const { userRegValidation, loginValidation } = require('../validations/validations');
 const bcrypt = require('bcrypt');
@@ -19,6 +20,9 @@ router.post('/login', async (req, res) => {
     //check if password is correct against email
     const validPassword = await bcrypt.compare(req.body.password, userExists.password);
     if (!validPassword) return res.status(400).send({ failure: 'Email or password is incorrect' });
+
+    const verificationToken = jwt.sign({ _id: userExists._id }, process.env.TOKEN_SECRET);
+    res.header('auth-token', verificationToken);
 
     //Output user details
     res.send({ message: "Login Successful", firstname: userExists.firstname, lastname: userExists.lastname, email: userExists.email, Role: userExists.roleName, createdAt: userExists.createdAt, updatedAt: userExists.updatedAt });
