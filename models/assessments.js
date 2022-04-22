@@ -7,25 +7,23 @@ const assessmentSchema = mongoose.Schema(
         title:
         {
             type: String,
-            required: true
+            required: true,
+            min: 6
         },
 
         description:
         {
             type: String,
-            required: true
-        },
+            required: true,
+            min: 10
 
-        mentor:
-        {
-            type: String,
-            required: true
         },
 
         mentorID:
         {
-            type: Number,
-            required: true
+            type: String,
+            required: true,
+            min: 12
         },
 
         createdAt:
@@ -34,11 +32,17 @@ const assessmentSchema = mongoose.Schema(
             default: Date.now
         },
 
+        updatedAt:
+        {
+            type: Date,
+            default: Date.now
+        },
+
         deadline:
         {
-            type: String,
-            required: true
-        },
+            type: Date,
+            default: Date.now
+        }
     });
 
-module.exports = mongoose.model('Assessments');
+module.exports = mongoose.model('Assessments', assessmentSchema);
